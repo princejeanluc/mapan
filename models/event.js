@@ -4,9 +4,9 @@ const {dbQuery}=require("./mysqlconnect.js")
 class Event{
 
     //Create
-    static createEvent(event){
+    static createEvent(event,callback){
         const query="insert into mapan_events (title,address,datetime_event,description,poster_url,id_user) values ('"+event.title+"', '"+event.address+"',date('"+event.datetime+"'),'"+event.description+"','"+event.poster_url+"','"+event.id_user+"');"
-        dbQuery(query)
+        dbQuery(query,callback)
     } 
     //Read
     static getEvent(id,callback){
@@ -33,5 +33,3 @@ class Event{
 }
 
 module.exports = Event
-
-Event.deleteEvent(1)
