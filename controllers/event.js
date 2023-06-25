@@ -21,7 +21,7 @@ exports.createEvent=(req,res,next)=>{
 
 exports.getEvent=(req,res,next)=>{
     try{
-        Event.getEvent(req.body.id, (result)=>{
+        Event.getEvent(req.params.id, (result)=>{
             res.status(200).json({data:result[0]})
         })
     }catch{
@@ -48,8 +48,16 @@ exports.updateEvent=(req,res,next)=>{
             description:req.body.description,
             poster_url:req.body.poster_urls
         }
-        Event.updateEvent((result)=>{
-            res.status(200).json({message:"Mise à jour effectué"})
+        Event.getEvent(req.params.id,(result)=>{
+            if(result ===[]){
+                res.status(400).json({message:"L'évenement n'existe pas "})
+            }else if(result[0].id_user == req.params.idUser){// on verifie que l'utilisateur est proprietaire de l'evenement 
+                Event.updateEvent((result)=>{
+                    res.status(200).json({message:"Mise à jour effectué"})
+                })
+            }else{
+                res.status(400).json({message:"Autorisation non accordé"})
+            }
         })
     }catch{
         res.status(400).json({message:"Une erreur est survenu"})
@@ -57,5 +65,19 @@ exports.updateEvent=(req,res,next)=>{
 }
 
 exports.deleteEvent=(req,res,next)=>{
-    
+    try{
+        Event.getEvent(req.params.id,(result)=>{
+            if(result ===[]){
+                res.status(400).json({message:"L'évenement n'existe pas "})
+            }else if(result[0].id_user == req.params.idUser){// on verifie que l'utilisateur est proprietaire de l'evenement 
+                Event.deleteEvent(req.params.id,(result)=>{
+                    res.status(200).json({message:"supprimer avec succes"})
+                })
+            }else{
+                res.status(400).json({message:"Autorisation non accordé"})
+            }
+        })
+    }catch{
+        res.status(400).json({message:"Une erreur est survenu"})
+    }
 }
