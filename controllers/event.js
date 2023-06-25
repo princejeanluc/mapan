@@ -22,10 +22,14 @@ exports.createEvent=(req,res,next)=>{
 exports.getEvent=(req,res,next)=>{
     try{
         Event.getEvent(req.params.id, (result)=>{
-            res.status(200).json({data:result[0]})
+            if (result[0]===undefined){
+                res.status(400).json({message:"L'évenement n'existe pas"})
+            }
+            else{
+                res.status(200).json({data:result})}
         })
     }catch{
-        res.status(400).json({message:"identifiant d'évènement incorrect"})
+        res.status(400).json({message:"Un probleme est survenu"})
     }
 }
 
@@ -49,7 +53,7 @@ exports.updateEvent=(req,res,next)=>{
             poster_url:req.body.poster_urls
         }
         Event.getEvent(req.params.id,(result)=>{
-            if(result ===[]){
+            if(result[0] ===undefined){
                 res.status(400).json({message:"L'évenement n'existe pas "})
             }else if(result[0].id_user == req.params.idUser){// on verifie que l'utilisateur est proprietaire de l'evenement 
                 Event.updateEvent((result)=>{
