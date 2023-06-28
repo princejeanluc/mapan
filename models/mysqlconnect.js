@@ -16,9 +16,9 @@ exports.dbQuery= function dbQuery(query,callback){
         if(error) throw error
         else{
             con.query(query, (error, result,fields)=>{
-                if(error) throw error
+                if(error) callback(error, null)
                 else{
-                 callback(result)
+                 callback(null,result)
                  con.end()
                 }
             })
