@@ -8,7 +8,7 @@ exports.createEvent=(req,res,next)=>{
             address:req.body.address,
             datetime:req.body.datetime,
             description:req.body.description,
-            poster_url:req.body.poster_url,
+            poster_url:req.protocol+"://"+req.get('host')+"/images/"+req.file.filename,
             id_user:req.auth.id
         }
         Event.createEvent(e, (error,result)=>{
@@ -48,14 +48,14 @@ exports.updateEvent=(req,res,next)=>{
     
     new Promise((resolve,reject)=>{
         e = {
-            id:req.body.id, 
+            id:req.params.id, 
             title:req.body.title,
             address:req.body.address,
             datetime:req.body.datetime,
             description:req.body.description,
-            poster_url:req.body.poster_urls
+            poster_url:req.protocol+"://"+req.get('host')+"/images/"+req.file.filename
         }
-        Event.getEvent(req.body.id,(error,result)=>{
+        Event.getEvent(req.params.id,(error,result)=>{
             if(error){reject(error)}
             else{
                 if(result[0] === undefined){
