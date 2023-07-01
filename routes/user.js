@@ -1,7 +1,10 @@
 const express = require("express")
 const router = express.Router()
 const userCtrl = require("../controllers/user.js")
-router.post("/signup",userCtrl.signup)
-router.post("/login",userCtrl.login)
+const checkInscrData = require("../middlewares/checkInscriptionData.js")
+const checkLoginData = require("../middlewares/checkLoginData.js")
+
+router.post("/signup",checkInscrData,userCtrl.signup)
+router.post("/login",checkLoginData,userCtrl.login)
 
 module.exports = router

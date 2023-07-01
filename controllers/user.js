@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken")
 
 
 exports.signup=(req,res,next)=>{
-        console.log(req.body)
         new Promise((resolve,reject)=>{
             bcrypt.hash(req.body.password,10).then((hash)=>{
                 user = {
@@ -17,31 +16,36 @@ exports.signup=(req,res,next)=>{
                 User.createUser(user,(error,result)=>{
                     if(error){reject(error)}
                     else{
-                        res.status(200).json({message:"Utilisateur crée avec succès"})
+                        success = {message:"Utilisateur crée avec succès"}
+                        res.status(200).json({success:success})
                     }
                 })
             }).catch((error)=>{reject(error)})
-        }).catch((error)=>{res.status(500).json({message:"une erreur est survenu",error:error})  })
+        }).catch((error)=>{res.status(500).json({error:error})  })
         
     
 }
 
 exports.login=(req,res,next)=>{
-
     new Promise((resolve,reject)=>{
         User.getUserByEmail(req.body.email,(error,result)=>{
             if(error!==null){reject(error)}
             else{
+                let error ={}
                 if (result[0]===undefined){
-                    res.status(401).json({message:"L'utilisateur inexistant "})
+                    error.message = "L'utilisateur inexistant "
+                    res.status(401).json({error:error})
                 }else{
-                    console.log(result[0])
                     bcrypt.compare(req.body.password,result[0].pssword).then((valid)=>{
                         if(!valid){
-                            res.status(401).json({message:"Mot de passe incorrect"})
+                            error.message ="Mot de passe incorrect" 
+                            res.status(400).json({error:error})
                         }else{
                             res.status(200).json({
                                 id:result[0].id,
+                                success :{
+                                    message:"Authentifié avec succès"
+                                },
                                 token:jwt.sign(
                                     {idUser:result[0].id},
                                     "RANDOM_TOKEN_SECRET",
@@ -49,10 +53,13 @@ exports.login=(req,res,next)=>{
                                 )})
                         }
                         }).catch((error)=>{
+                            error.message = "erreur est survenu dans la verification du mot de passe "
                             res.status(500).json({error:error})
                         })
                 }
             }
         })
-    }).catch((error)=>{res.status(500).json({message:"erreur dans la verification du mot de passe ",error:error})})
+    }).catch((error)=>{
+        error.message = "une erreur est survenu lors du processus d'identification "
+        res.status(500).json({error:error})})
 }

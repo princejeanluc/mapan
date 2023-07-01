@@ -13,9 +13,12 @@ exports.createEvent=(req,res,next)=>{
         }
         Event.createEvent(e, (error,result)=>{
             if (error){reject(error)}
-            else{res.status(200).json({message:"Créer avec succes"})}
+            else{
+                success = {message:"Créer avec succes"}
+                res.status(200).json({success:success})}
         })
-    }).catch((error)=>res.status(400).json({message:"Un probleme est survenu",error :error}))
+    }).catch((error)=>{
+        res.status(400).json({error :error})})
 }
 
 exports.getEvent=(req,res,next)=>{
@@ -24,13 +27,15 @@ exports.getEvent=(req,res,next)=>{
             if (error){reject(error)}
             else{
                 if (result[0]===undefined){
-                    res.status(400).json({message:"L'évenement n'existe pas"})
+                    error = {message :"L'évenement ciblé n'existe pas"}
+                    reject(error)
                 }
                 else{
+                    success={message:"successful"}
                     res.status(200).json({data:result})}
             }
         })
-    }).catch((error)=>res.status(400).json({message:"Un probleme est survenu",error :error}))
+    }).catch((error)=>res.status(400).json({error :error}))
 }
 
 exports.getAllEvents=(req,res,next)=>{
