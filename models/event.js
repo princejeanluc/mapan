@@ -38,9 +38,9 @@ class Event{
             ],callback)
     } 
 
-    static getAllEvents(callback){
-        const query = "select * from mapan_events"
-        dbQuery(query,[],callback)
+    static getAllEvents(id,callback){
+        const query = "select * from mapan_events where id_user=?"
+        dbQuery(query,[id],callback)
     }
 
     //Delete

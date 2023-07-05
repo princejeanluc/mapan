@@ -40,7 +40,7 @@ exports.getEvent=(req,res,next)=>{
 
 exports.getAllEvents=(req,res,next)=>{
     new Promise((resolve,reject)=>{
-        Event.getAllEvents((error ,result)=>{
+        Event.getAllEvents(req.auth.id,(error ,result)=>{
             if (error ){reject(error)}
             else{res.status(200).json({data:result})}
         })   

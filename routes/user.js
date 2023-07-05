@@ -1,10 +1,13 @@
 const express = require("express")
-const router = express.Router()
+const routerAuth = express.Router()
+const routerUser = express.Router()
 const userCtrl = require("../controllers/user.js")
 const checkInscrData = require("../middlewares/checkInscriptionData.js")
 const checkLoginData = require("../middlewares/checkLoginData.js")
+const auth = require("../middlewares/auth.js")
 
-router.post("/signup",checkInscrData,userCtrl.signup)
-router.post("/login",checkLoginData,userCtrl.login)
-
-module.exports = router
+routerAuth.post("/signup",checkInscrData,userCtrl.signup)
+routerAuth.post("/login",checkLoginData,userCtrl.login)
+routerUser.get("",auth,userCtrl.getUser)
+routerUser.get("/:id",auth,userCtrl.getUserById)
+module.exports = {routerAuth,routerUser}

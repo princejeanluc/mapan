@@ -63,3 +63,54 @@ exports.login=(req,res,next)=>{
         error.message = "une erreur est survenu lors du processus d'identification "
         res.status(500).json({error:error})})
 }
+
+
+
+exports.getUser=(req,res,next)=>{
+    new Promise((resolve,reject)=>{
+        User.getUser(req.auth.id,(error,result)=>{
+            if(error !== null) {reject(error)}
+            else{
+                let user = result[0]
+                if(user === undefined){
+                    let error = {message : "l'utilisateur n'existe pas "}
+                    reject(error)
+                }else{
+                    delete user.pssword
+                    res.status(200).json({
+                        success:{message:"successful"},
+                        data:[user]
+                    })
+                }
+            }
+        })
+    }).catch((error)=>{
+        error.message = "une erreur est survenu lors de l'extraction de vos informations"
+        res.status(500).json({error:error})})
+}
+
+exports.getUserById=(req,res,next)=>{
+    new Promise((resolve,reject)=>{
+        User.getUser(req.params.id,(error,result)=>{
+            if(error !== null) {reject(error)}
+            else{
+                let user = result[0]
+                if(user === undefined){
+                    let error = {message : "l'utilisateur n'existe pas "}
+                    reject(error)
+                }else{
+                    delete user.pssword
+                    if(user.id != req.auth.id){
+                        delete user.birthday
+                        delete user.email
+                    }
+                    res.status(200).json({
+                        success:{message:"successful"},
+                        data:[user]
+                    })
+                }
+            }
+        })
+    }).catch((error)=>{
+        res.status(500).json({error:error})})
+}
