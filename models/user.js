@@ -1,4 +1,4 @@
-/** */
+/*
 const {dbQuery}=require("./mysqlconnect.js")
 
 class User{
@@ -54,6 +54,50 @@ class User{
 }
 
 module.exports = User
+*/
+
+const { Sequelize, DataTypes, Model } = require('sequelize');
+
+
+
+const sequelize = new Sequelize('database', 'username', 'password', {
+    host: 'localhost',
+    dialect: 'msql'/* one of 'mysql' | 'postgres' | 'sqlite' | 'mariadb' | 'mssql' | 'db2' | 'snowflake' | 'oracle' */
+  });
+
+class User extends Model {}
+
+User.init({
+  // Model attributes are defined here
+  firstName: {
+    type: DataTypes.STRING
+  },
+  lastName: {
+    type: DataTypes.STRING
+    // allowNull defaults to true
+  },
+  birthday: {
+    type: DataTypes.STRING
+    // allowNull defaults to true
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false
+    // allowNull defaults to true
+  },
+  mdp: {
+    type: DataTypes.STRING,
+    // allowNull defaults to true
+  },
+  phoneNumber: {
+    // allowNull defaults to true
+  }
+}, {
+  // Other model options go here
+  sequelize, // We need to pass the connection instance
+  modelName: 'User' // We need to choose the model name
+});
+
 
 
 
